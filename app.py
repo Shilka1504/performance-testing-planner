@@ -13,7 +13,7 @@ if not api_key:
 
 # Initialize Grok API client (compatible with OpenAI SDK)
 client = OpenAI(base_url="https://api.x.ai/v1", api_key=api_key)
-MODEL = "grok-beta"  # Use a multimodal model like grok-beta for image + text analysis
+MODEL = "grok-2-vision-1212"  # Use a multimodal model like grok-beta for image + text analysis
 
 # Helper function to encode image to base64 for API
 def encode_image(image_file):
@@ -85,4 +85,5 @@ st.sidebar.markdown("""
 2. Click 'Generate PT Plan'.
 3. Review the AI-generated output.
 4. Refine prompts or inputs if needed.
+
 """)
