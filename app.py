@@ -7,16 +7,16 @@ from dotenv import load_dotenv
 # ────────────────────────────────────────────────
 # Load API key — works both on Streamlit Cloud and locally
 # ────────────────────────────────────────────────
-if "OPENAI_API_KEY" in st.secrets:
-    api_key = st.secrets["OPENAI_API_KEY"]
-    base_url = None                     # standard OpenAI endpoint
-elif "XAI_API_KEY" in st.secrets:
+if "XAI_API_KEY" in st.secrets:
     api_key = st.secrets["XAI_API_KEY"]
     base_url = "https://api.x.ai/v1"    # xAI endpoint
+elif "OPENAI_API_KEY" in st.secrets:
+    api_key = st.secrets["OPENAI_API_KEY"]
+    base_url = None                     # standard OpenAI endpoint
 else:
     # Fallback for local development (using .env file)
     load_dotenv()
-    api_key = os.getenv("OPENAI_API_KEY") or os.getenv("XAI_API_KEY")
+    api_key = os.getenv("XAI_API_KEY") or os.getenv("OPENAI_API_KEY")
     base_url = os.getenv("BASE_URL")    # optional: set in .env if using xAI locally
 
 if not api_key:
@@ -25,9 +25,9 @@ if not api_key:
         "**On Streamlit Cloud**:\n"
         "→ Go to App Settings → Secrets tab\n"
         "→ Add one of these lines:\n"
-        '  OPENAI_API_KEY = "sk-proj-..."\n'
+        '  XAI_API_KEY = "xai-..."\n'
         '  or\n'
-        '  XAI_API_KEY = "xai-..."\n\n'
+        '  OPENAI_API_KEY = "sk-proj-..."\n\n'
         "**Locally**:\n"
         "→ Create .env file in project folder with the same line"
     )
@@ -41,11 +41,11 @@ client = OpenAI(
 )
 
 # Choose model — change here depending on what you have access to / want to use
-# Recommended cheap & capable option right now:
-MODEL = "gpt-4o-mini"               # OpenAI - very good vision + cheap
+# Recommended xAI option (since your key is for xAI):
+MODEL = "grok-2-vision-1212"        # xAI - good vision support
+# MODEL = "grok-4-1-fast-reasoning" # xAI alternative (cheaper & faster)
+# MODEL = "gpt-4o-mini"             # OpenAI - if you switch keys
 # MODEL = "gpt-4o"                  # OpenAI - more accurate but more expensive
-# MODEL = "grok-2-vision-1212"      # xAI - if you have credits and prefer Grok
-# MODEL = "grok-4-1-fast-reasoning" # xAI alternative
 
 # Helper function to encode uploaded image to base64
 def encode_image(image_file):
@@ -147,7 +147,7 @@ Be specific and realistic — do not invent unrealistic numbers without justific
 
         except Exception as e:
             st.error(f"API call failed: {str(e)}\n\n"
-                     f"• Check if you have credits/balance\n"
+                     f"• Check if you have credits/balance in xAI Console\n"
                      f"• Verify API key is correct in Secrets\n"
                      f"• Try a different model if needed")
             st.stop()
