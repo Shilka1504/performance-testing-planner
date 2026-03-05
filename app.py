@@ -42,7 +42,7 @@ client = OpenAI(
 
 # Choose model — change here depending on what you have access to / want to use
 # Recommended xAI option (since your key is for xAI):
-MODEL = "grok-2-vision-1212"        # xAI - good vision support
+MODEL = "grok-vision-beta"        # xAI - good vision support
 # MODEL = "grok-4-1-fast-reasoning" # xAI alternative (cheaper & faster)
 # MODEL = "gpt-4o-mini"             # OpenAI - if you switch keys
 # MODEL = "gpt-4o"                  # OpenAI - more accurate but more expensive
@@ -50,7 +50,13 @@ MODEL = "grok-2-vision-1212"        # xAI - good vision support
 # Helper function to encode uploaded image to base64
 def encode_image(image_file):
     return base64.b64encode(image_file.read()).decode('utf-8')
-
+try:
+    models = client.models.list()
+    st.sidebar.write("Available xAI models (debug):")
+    for m in models.data:
+        st.sidebar.write(m.id)
+except Exception as e:
+    st.sidebar.write("Cannot list models:", str(e))
 # ────────────────────────────────────────────────
 # Streamlit App UI
 # ────────────────────────────────────────────────
@@ -178,3 +184,4 @@ st.sidebar.markdown("""
 """)
 
 st.sidebar.info(f"Using model: **{MODEL}**")
+
